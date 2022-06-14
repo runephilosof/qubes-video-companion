@@ -11,7 +11,17 @@ jobs:
   build-deb:
     runs-on: ubuntu-latest
 
+    env:
+      version: 2.0.1
+      pkg: qubes-video-companion
+      pkg_name: $pkg-$version
+
     steps:
     - uses: actions/checkout@v3
-    - name: Build deb
-      run: ./build/create-deb.sh
+    - name: Build rpm
+      run: docker run -v $PWD:/code fedora:35 bash -c "cd /code && dnf install -y rpm-build rpmdevtools pandoc && tar czf $pkg_name.tar.gz --transform 's,^,$pkg_name/,' * && rpmdev-setuptree && mv $pkg_name.tar.gz ~/rpmbuild/SOURCES && cp rpm_spec/$pkg.spec.in ~/rpmbuild/SPECS && rpmbuild -ba ~/rpmbuild/SPECS/$pkg.spec.in && mv ~/rpmbuild/RPMS /code/"
+    - name: Archive packages
+        uses: actions/upload-artifact@v3
+        with:
+          name: rpms
+          path: RPMS/
