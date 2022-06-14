@@ -21,7 +21,7 @@ jobs:
     - name: Build rpm
       run: docker run -v $PWD:/code fedora:35 bash -c "cd /code && dnf install -y rpm-build rpmdevtools pandoc && tar czf $pkg_name.tar.gz --transform 's,^,$pkg_name/,' * && rpmdev-setuptree && mv $pkg_name.tar.gz ~/rpmbuild/SOURCES && cp rpm_spec/$pkg.spec.in ~/rpmbuild/SPECS && rpmbuild -ba ~/rpmbuild/SPECS/$pkg.spec.in && mv ~/rpmbuild/RPMS /code/"
     - name: Archive packages
-        uses: actions/upload-artifact@v3
-        with:
-          name: rpms
-          path: RPMS/
+      uses: actions/upload-artifact@v3
+      with:
+        name: rpms
+        path: RPMS/
