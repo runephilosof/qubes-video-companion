@@ -1,0 +1,17 @@
+name: Build
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+
+  build-rpm:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build rpm
+      run: docker run fedora:35 "dnf install -y install rpm-build rpmdevtools pandoc && ./build/create-rpm.sh"
