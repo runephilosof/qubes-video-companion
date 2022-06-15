@@ -10,3 +10,4 @@ RUN tar czf $pkg_name.tar.gz $pkg_name
 RUN rpmdev-setuptree
 RUN mv $pkg_name.tar.gz ~/rpmbuild/SOURCES
 RUN cp /$pkg_name/rpm_spec/*.spec.in ~/rpmbuild/SPECS
+RUN echo ~
