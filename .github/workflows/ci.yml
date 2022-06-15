@@ -18,8 +18,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: Build fedora docker image
+      run: docker build --tag fedora-35-builder --build-arg pkg_name=$pkg_name .
     - name: Build rpm
-      run: docker run -v $PWD:/code fedora:35 bash -c "cd /code && dnf install -y rpm-build rpmdevtools pandoc && tar czf $pkg_name.tar.gz --transform 's,^,$pkg_name/,' * && rpmdev-setuptree && mv $pkg_name.tar.gz ~/rpmbuild/SOURCES && cp rpm_spec/$pkg.spec.in ~/rpmbuild/SPECS && rpmbuild -ba ~/rpmbuild/SPECS/$pkg.spec.in && mv ~/rpmbuild/RPMS /code/"
+      run: docker run -v $PWD/RPMS/:/root/rpmbuild/RPMS/ fedora-35-builder bash -c "rpmbuild -ba /root/rpmbuild/SPECS/$pkg.spec.in"
     - name: Archive packages
       uses: actions/upload-artifact@v3
       with:
