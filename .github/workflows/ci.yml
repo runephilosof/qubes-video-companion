@@ -14,12 +14,11 @@ jobs:
     env:
       version: 2.0.1
       pkg: qubes-video-companion
-      pkg_name: $pkg-$version
 
     steps:
     - uses: actions/checkout@v3
     - name: Build fedora docker image
-      run: docker build --tag fedora-35-builder --build-arg pkg_name=$pkg_name .
+      run: docker build --tag fedora-35-builder --build-arg pkg_name=$pkg-$version .
     - name: Build rpm
       run: docker run -v $PWD/RPMS/:/root/rpmbuild/RPMS/ fedora-35-builder bash -c "rpmbuild -ba /root/rpmbuild/SPECS/$pkg.spec.in"
     - name: Archive packages
